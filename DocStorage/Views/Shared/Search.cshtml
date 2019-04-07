@@ -1,0 +1,78 @@
+﻿@model IEnumerable<DocStorage.Models.Document>
+
+@helper Truncate(string input, int length)
+{
+     if (input.Length <= length) {
+          @input
+     } else {
+          @input.Substring(0, length)<text>...</text>
+     }
+} 
+
+@helper Truncate(string input)
+{
+    int index = input.IndexOf(' ');
+    @input.Substring(0, index)
+} 
+
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width"/>
+    @Html.Partial("PartialHeader")
+    <title>Search</title>
+</head>
+<body style="background-color:lightgrey">
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+    @using (Html.BeginForm())
+    {
+        <p>
+            Search: @Html.TextBox("SearchString")  
+            <input type="submit" value="Search" />
+        </p>
+    }
+    <table style="width:100%">
+        <tr>
+            <th style="font-size:medium">
+                @Html.ActionLink("File Name", "Search", new { sortOrder = ViewBag.NameSortParm })
+            </th>
+            <th style="font-size:medium">
+                @Html.ActionLink("Date", "Search", new { sortOrder = ViewBag.DateSortParm })
+            </th>
+            <th style="font-size:medium">
+                @Html.ActionLink("Autor", "Search", new { sortOrder = ViewBag.AutorSortParm })
+            </th>
+            <th style="font-size:medium">
+                @Html.DisplayText("File")
+            </th>
+            <th></th>
+        </tr>
+    
+    @foreach (var item in Model) {
+        <tr>
+            <td style="font-size:medium; text-align:center">
+                @Truncate(item.name, 30)
+            </td>
+            <td style="font-size:medium; text-align:center">
+                @Truncate(item.date.ToString())
+            </td>
+            <td style="font-size:medium; text-align:center">
+                @Truncate(item.autor, 30)
+            </td>
+            <td style="font-size:medium; text-align:center">
+                @Html.ActionLink("file", "OpenFile", new { path = item.binaryFile })
+            </td>
+        </tr>
+    }
+    
+    </table>
+</body>
+</html>

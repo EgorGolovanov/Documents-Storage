@@ -1,0 +1,46 @@
+﻿@model DocStorage.Models.Document
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    @Html.Partial("PartialHeader")
+    <title>Create</title>
+</head>
+<body style="background-color:lightgrey">
+    @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <fieldset>
+            <legend>Document</legend>
+    
+            <div class="editor-label">
+                @Html.LabelFor(model => model.name)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.name)
+                @Html.ValidationMessageFor(model => model.name)
+            </div>
+    
+            <div class="editor-label">
+                @Html.LabelFor(model => model.date)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.date)
+                @Html.ValidationMessageFor(model => model.date)
+            </div>
+            <div class="editor-label">
+                @Html.LabelFor(model => model.binaryFile)
+            </div>
+            <input type="file" name="fileupload" value="fileupload" id="fileupload" multiple="multiple" />
+            <p>
+                <input type="submit" value="Create" />
+            </p>
+        </fieldset>
+    }
+</body>
+</html>

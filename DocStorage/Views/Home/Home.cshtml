@@ -1,0 +1,21 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>MyApplication</title>
+    @Html.Partial("PartialHeader")
+</head>
+<body style="background-color:lightgrey">
+    <div>
+        @if (Session["userName"] != null)
+        {
+            <p style="font-size:20px; text-align:center"> Приветсвую, @Session["userName"].ToString()</p>
+        }
+    </div>   
+</body>
+</html>

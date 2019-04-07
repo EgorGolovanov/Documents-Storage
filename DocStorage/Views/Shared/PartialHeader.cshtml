@@ -1,0 +1,22 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+</head>
+<body>
+    <div style="font-size:20pt; width:100%; height:auto; background-color:lightskyblue">
+        @Html.ActionLink("Home", "Index", "Home", new
+           { style = "margin-right:15%" })
+        @Html.ActionLink("Create", "Create", "Home", new
+           { style = "margin-right:15%" })
+        @Html.ActionLink("Search", "Search", "Home", new
+           { style = "margin-right:20%" })
+        @if (Session["userName"] != null)
+        {
+            @Html.ActionLink("Log out", "Index", "Account")
+        }
+    </div>
+</body>
+</html>
