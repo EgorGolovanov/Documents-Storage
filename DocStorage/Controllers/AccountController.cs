@@ -13,7 +13,6 @@ namespace DocStorage.Controllers
     public class AccountController : Controller
     {
         [HttpGet]
-        [ValidateAntiForgeryToken]
         public ActionResult Index()
         {
             AccountModel account = new AccountModel();
