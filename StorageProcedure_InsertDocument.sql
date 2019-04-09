@@ -1,12 +1,12 @@
 CREATE PROCEDURE [dbo].[sp_InsertDocument]
-    @name varchar(MAX),
-    @autor varchar(MAX),
-	@date date,
-	@binaryFile varchar(MAX)
+	@id int,
+	@name nvarchar(255),
+	@authorId int,
+	@date datetime,
+	@binaryFile nvarchar(MAX)
 AS
-    INSERT INTO Document(name, autor, date, binaryFile)
-    VALUES (@name, @autor, @date, @binaryFile)
-  
-    SELECT SCOPE_IDENTITY()
 
-GO
+INSERT INTO Document(id, NameDocument, AuthorId, Date, BinaryFile)
+VALUES(@id, @name, @authorId, @date, @binaryFile)
+SELECT SCOPE_IDENTITY() 
+GO 
