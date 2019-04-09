@@ -59,16 +59,16 @@
     @foreach (var item in Model) {
         <tr>
             <td style="font-size:medium; text-align:center">
-                @Truncate(item.name, 30)
+                @Truncate(item.NameDocument, 30)
             </td>
             <td style="font-size:medium; text-align:center">
-                @Truncate(item.date.ToString())
+                @Truncate(item.Date.ToString())
             </td>
             <td style="font-size:medium; text-align:center">
-                @Truncate(item.autor, 30)
+                @Truncate(item.Author.Name, 30)
             </td>
             <td style="font-size:medium; text-align:center">
-                @Html.ActionLink("file", "OpenFile", new { path = item.binaryFile })
+                @Html.ActionLink("file", "OpenFile", new { path = item.BinaryFile })
             </td>
         </tr>
     }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using NHibernate;
+using NHibernate.Linq;
 using System.Data.SqlClient;
 using System.IO;
 using DocStorage.Models;
@@ -32,27 +33,31 @@ namespace DocStorage.Controllers
         /// POST метод создания документа. Сохраняет документ в базу данных посредством хранимой процедуры,
         /// файл сохраняет в поддиректорию приложения (папка "Files")
         /// </summary>
-        /// <param name="doc">Модель документа</param>
-        /// <param name="fileupload">Перечислитель выбранных пользователем файлов</param>
+        /// <param Name="doc">Модель документа</param>
+        /// <param Name="fileupload">Перечислитель выбранных пользователем файлов</param>
         /// <returns></returns>
         [HttpPost]
         public ActionResult Create(Document doc, IEnumerable<HttpPostedFileBase> fileupload)
         {
+            doc.AuthorId = int.Parse(Session["id"].ToString());
             using (ISession session = NHibernateHelper.OpenSession())
             {
+                doc.Id = session.Query<Document>().ToList().Count + 1;
                 foreach (var file in fileupload)
                 {
                     if (file != null && file.ContentLength > 0)
                     {
                         var extention = System.IO.Path.GetExtension(file.FileName);
-                        var path = System.IO.Path.Combine(Server.MapPath("~/Content/Files/"), doc.name + extention);
+                        var path = System.IO.Path.Combine(Server.MapPath("~/Content/Files/"), doc.NameDocument + extention);
                         file.SaveAs(path);
 
                         ProcedureQuery query = new ProcedureQuery("sp_InsertDocument");
-                        query.AddString("name", doc.name);
-                        query.AddString("autor", Session["userName"].ToString());
-                        query.AddDateTime("date", doc.date);
+                        query.AddInt32("id", doc.Id);
+                        query.AddString("name", doc.NameDocument);
+                        query.AddInt32("authorId", doc.AuthorId);
+                        query.AddDateTime("date", doc.Date);
                         query.AddString("binaryFile", path);
+
 
                         if (!NHibernateHelper.ExecuteStorageProcedure(session, query))
                             return View("Create");
@@ -67,8 +72,8 @@ namespace DocStorage.Controllers
         /// <summary>
         /// Выводит список всех документов, осуществляет поиск по документам и их сортировку
         /// </summary>
-        /// <param name="sortOrder"> Возвращает строку, которая выполняет нужную сортировку</param>
-        /// <param name="searchString"> Возвращает строку, введенную в поиске для поиска документов</param>
+        /// <param Name="sortOrder"> Возвращает строку, которая выполняет нужную сортировку</param>
+        /// <param Name="searchString"> Возвращает строку, введенную в поиске для поиска документов</param>
         /// <returns></returns>
         public ActionResult Search(string sortOrder, string searchString)
         {
@@ -76,8 +81,8 @@ namespace DocStorage.Controllers
             {
                 using (ISession session = NHibernateHelper.OpenSession())
                 {
-                    ProcedureQuery query = new ProcedureQuery("sp_GetDocuments");
-                    documents = NHibernateHelper.ExecuteWithReturn(session, query);
+                    documents = session.Query<Document>().ToList();
+                    var user = session.Query<User>().ToList();
                     if (documents == null)
                         return RedirectToAction("Create", "Home");
                 }
@@ -89,29 +94,29 @@ namespace DocStorage.Controllers
 
             if (!String.IsNullOrEmpty(searchString))
             {
-                documents = documents.Where(s => s.name.Contains(searchString)
-                                       || s.autor.Contains(searchString) 
-                                       || s.date.ToString().Contains(searchString));
+                documents = documents.Where(s => s.NameDocument.Contains(searchString)
+                                       || s.Author.Name.Contains(searchString) 
+                                       || s.Date.ToString().Contains(searchString));
             }
             switch (sortOrder)
             {
                 case "name_desc":
-                    documents = documents.OrderByDescending(s => s.name);
+                    documents = documents.OrderByDescending(s => s.NameDocument);
                     break;
                 case "Date":
-                    documents = documents.OrderBy(s => s.date);
+                    documents = documents.OrderBy(s => s.Date);
                     break;
                 case "date_desc":
-                    documents = documents.OrderByDescending(s => s.date);
+                    documents = documents.OrderByDescending(s => s.Date);
                     break;
                 case "autor_desc":
-                    documents = documents.OrderByDescending(s => s.autor);
+                    documents = documents.OrderByDescending(s => s.Author.Name);
                     break;
                 case "Autor":
-                    documents = documents.OrderBy(s => s.autor);
+                    documents = documents.OrderBy(s => s.Author.Name);
                     break;
                 default:
-                    documents = documents.OrderBy(s => s.date);
+                    documents = documents.OrderBy(s => s.Date);
                     break;
             }
             return View(documents);

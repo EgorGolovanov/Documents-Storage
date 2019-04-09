@@ -25,7 +25,7 @@ namespace DocStorage.Models.NHibernate
 
         public void AddString(string name, string value)
         {
-            AddParameter(name, SqlDbType.VarChar, value);
+            AddParameter(name, SqlDbType.NVarChar, value);
         }
 
         public void AddDateTime(string name, DateTime value)

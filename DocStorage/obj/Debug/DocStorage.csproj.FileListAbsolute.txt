@@ -168,4 +168,7 @@ E:\DocStorage\DocStorage\bin\NHibernate.dll
 E:\DocStorage\DocStorage\bin\FluentNHibernate.xml
 E:\DocStorage\DocStorage\bin\Iesi.Collections.xml
 E:\DocStorage\DocStorage\bin\NHibernate.xml
-D:\DocStorage\DocStorage\obj\Debug\DocStorage.csprojResolveAssemblyReference.cache
+D:\DocStorage\DocStorage\bin\DocStorage.dll.config
+D:\DocStorage\DocStorage\obj\Debug\DocStorage.csprojAssemblyReference.cache
+D:\DocStorage\DocStorage\obj\Debug\DocStorage.csproj.CoreCompileInputs.cache
+D:\DocStorage\DocStorage\obj\Debug\DocStorage.csproj.CopyComplete

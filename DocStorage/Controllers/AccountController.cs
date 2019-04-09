@@ -7,6 +7,7 @@ using System.Web.Mvc;
 using DocStorage.Models;
 using DocStorage.Models.NHibernate;
 using NHibernate;
+using NHibernate.Linq;
 
 namespace DocStorage.Controllers
 {
@@ -15,28 +16,26 @@ namespace DocStorage.Controllers
         [HttpGet]
         public ActionResult Index()
         {
-            AccountModel account = new AccountModel();
-            return View("AccountView", account);
+            User account = new User();
+            return View("ViewAccount", account);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Index(AccountModel account)
+        public ActionResult Index(User account)
         {
             using (ISession session = NHibernateHelper.OpenSession())
             {
-                var user = session.CreateSQLQuery(String.Format("select Users.name from Users where Users.name='{0}' and Users.password='{1}'", account.name, account.password))
-                    .SetMaxResults(1)
-                    .SetCacheable(true)
-                    .UniqueResult();
+                var user = session.Query<User>().Where(a => a.Name.Equals(account.Name) && a.Password.Equals(account.Password)).FirstOrDefault();
                 if (user == null)
                 {
                     Session["checkCorrect"] = false;
-                    return View("AccountView");
+                    return View("ViewAccount");
                 }
                 else
                 {
-                    Session["userName"] = user.ToString();
+                    Session["id"] = user.Id;
+                    Session["userName"] = user.Name;
                     Session["checkCorrect"] = true;
                 }
             }
