@@ -17,7 +17,7 @@ public static class NHibernateHelper
     {
         var cfg = new Configuration()
         .DataBaseIntegration(db => {
-            db.ConnectionString = @"Server=DESKTOP-93DM52M\SQLEXPRESS;initial catalog=MyDocumentsDB;Integrated Security=SSPI;";
+            db.ConnectionString = @"Server=..\SQLEXPRESS;initial catalog=MyDocumentsDB;Integrated Security=SSPI;";
             db.Dialect<MsSql2012Dialect>();
         });
         var mapper = new ModelMapper();
